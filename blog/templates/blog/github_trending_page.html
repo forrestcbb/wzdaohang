@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}template-blogpage{% endblock %}
+{% block content %}
+
+<div class="container">
+<nav style="--bs-breadcrumb-divider: '>';padding: 10px" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#"><h5>首页</h5></a></li>
+    <li class="breadcrumb-item active" aria-current="page">Library</li>
+  </ol>
+</nav>
+
+<div class="row card" style="padding: 20px">
+    <div class="intro">{{ page.intro }}</div>
+
+{% if page.githubtags.all.count %}
+    <div class="githubtag">
+        <h3>Tags</h3>
+        {% for tag in page.githubtags.all %}
+            <a href="{% slugurl 'githubtags' %}?tag={{ tag }}"><button type="button">{{ tag }}</button></a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>this page has no tag</p>
+{% endif %}
+
+     <table class="table  table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">{{ page.title }}</th>
+                  <th scope="col">{{ page.date }}</th>
+                </tr>
+              </thead>
+              <tbody>
+{% for block in page.body %}
+       {% if block.block_type == 'githubcodes' %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td><a href="{{ block.value.codeurl }}">{{ block.value.codename }}</a></td>
+                  <td> {{ block.value.codeintro }}</td>
+                </tr>
+        {% endif %}
+ {% endfor %}
+
+
+              </tbody>
+     </table>
+
+
+
+
+
+<p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+{% endblock %}
+
+</div>
+</div>

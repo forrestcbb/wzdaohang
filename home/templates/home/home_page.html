@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load wagtailcore_tags wagtailimages_tags%}
+
+{#{% block body_class %}template-blogindexpage{% endblock %}#}
+{% block body_class %}template-homepage{% endblock %}
+{% block headjs %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#hide").click(function(){
+  $("#p2").hide();
+  });
+  $("#show").click(function(){
+  $("#p2").show();
+  });
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<p id="p1">如果点击“隐藏”按钮，我就会消失。</p>
+<button id="hide" type="button">隐藏</button>
+<button id="show" type="button">显示</button>
+<div class="row ">
+ <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+  <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
+
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+  <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+
+</div>
+
+    <div class="col card table-responsive" style="margin: 20px" id="p2">
+                  <table class="table  table-hover" >
+              <thead>
+                <tr>
+                  <th scope="col" >#</th>
+                  <th scope="col">
+
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+{##}
+    {% for gitpage in githubpage %}
+     {% if forloop.counter == 1 %}
+
+         {% for block in gitpage.body %}
+       {% if block.block_type == 'githubcodes' %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}<a href="{{ block.value.codeurl }}">{{ block.value.codename }}</a></th>
+{#                  <td> {{ block.value.codeintro|slice:":30"  }}</td>#}
+                <td> {{ block.value.codeintro|truncatechars:30 }}</td>
+                </tr>
+        {% endif %}
+ {% endfor %}
+     {% endif %}
+    {% endfor %}
+{#                <tr>#}
+{#                  <th scope="row">2</th>#}
+{#                  <td>Jacob</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <th scope="row">3</th>#}
+{#                  <td colspan="2">Larry the Bird</td>#}
+{#                </tr>#}
+              </tbody>
+            </table>
+
+    </div>
+    <div class="col">
+       <div class="col card" style="margin: 20px">
+                  <table class="table  table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">
+
+
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td colspan="2">Larry the Bird</td>
+                </tr>
+              </tbody>
+            </table>
+
+    </div>
+    </div>
+  </div>
+
+
+<div class="card" style="width: 100%;">
+    <div class="card-header">
+            <div class="row ">
+                <h5 class="panel-title">    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+  <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+  <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/>
+</svg>快速连接</h5>
+
+            </div>
+      </div>
+   <div class="row">
+
+    {% for post in page.get_children %}
+        <div  class="col-2 card " style="margin: 20px">
+            <a href="#{{ post.specific.title }}" >{{ post.specific.title}}</a>
+        </div>
+    {% endfor %}
+       </div>
+</div>
+
+
+{% for post in page.get_children %}
+<div class="card" style="width: 100%;">
+    <div class="card-header">
+            <div class="row " id="{{ post.specific.title }}">
+                <h5 class="panel-title"><a href="{% pageurl post %}">{{ post.specific.title }}</a></h5>
+            </div>
+      </div>
+    <div class="row">
+        <div class=" col-2 card" style="margin: 20px">
+            <img class="me-3" src="{% static 'img/1.png' %}" alt="" width="48" height="38">
+            <div class="lh-1">
+                <h1 class="h6 mb-0 text-white lh-1">Bootstrap</h1>
+                 <small>Since 2011</small>
+            </div>
+         </div>
+                {% for post3 in post.get_children %}
+                <div  class="col-2 card " style="margin: 20px">
+                    <a href="{% pageurl post3 %}" >{{ post3.specific.title}}{{ post3.specific.date}}</a>
+                </div>
+                {% endfor %}
+    </div>
+<br/>
+</div>
+<br/>
+
+{% endfor %}
+
+
+<span>blog tags:</span>
+ <div class="tags">
+{% for tag in pagetags %}
+    <a href="{% slugurl 'tags' %}?tag={{ tag }}"><button type="button">{{ tag }}</button></a>
+{% endfor %}
+ </div>
+
+<span>github tags:</span>
+ <div class="tags">
+{% for tag in githubtags %}
+    <a href="{% slugurl 'githubtags' %}?tag={{ tag }}"><button type="button">{{ tag }}</button></a>
+{% endfor %}
+ </div>
+
+{#    {% for post in pages %}#}
+{#  {% for post in page.get_children %}#}
+{#        <h1><a href="{% pageurl post %}">{{ post.title }}</a></h1>#}
+{#        {% with ptitle=post.title %}#}
+{#                {%  if ptitle == "Python爬虫学习1"  %}#}
+{#               <h1>这是指定PAGE{{ ptitle }}</h1>#}
+{#                {% endif %}#}
+{#        {% endwith %}#}
+{#         {%  if post.title == "CSDN2"  %}#}
+{#               <h1>这是指定PAGE2 CSDN2</h1>#}
+{#         {% endif %}#}
+{#        {{ post.specific.intro }}#}
+{#        {{ post.specific.body|richtext }}#}
+{##}
+{#           {% for post2 in post.get_children %}#}
+{#                 {% if forloop.counter <= 6  %}#}
+{#                <h3><a href="{% pageurl post2 %}">{{ post2.specific.title}}</a></h3>#}
+{#               {% else %}#}
+{#               <h6><a href="{% pageurl post2 %}">{{ post2.specific.title}}</a></h6>#}
+{#               {% endif %}#}
+{#           {% empty %}#}
+{#                <li>Sorry, no athletes in this list.</li>#}
+{#           {% endfor %}#}
+{#    {% endfor %}#}
+{##}
+{% endblock %}
+{% block js %}{% endblock %}

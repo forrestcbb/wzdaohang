@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags%}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+
+<div class="container ">
+
+  <div class="row card"  >
+    <div class="col-12">
+   <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">{{ page.title }}--{{ page.intro|richtext }}</th>
+      <th scope="col">Last</th>
+    </tr>
+    </thead>
+  <tbody>
+   {% for post in githubprojects %}
+        {% with post=post.specific %}
+    <tr>
+      <td><a href="{% pageurl post %}" style="text-decoration:none;a">{{ post.title }}{{ post.intro}}</a></td>
+      <td>Otto</td>
+    </tr>
+       {% endwith %}
+    {% endfor %}
+
+  </tbody>
+</table>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
